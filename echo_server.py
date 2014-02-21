@@ -8,18 +8,16 @@ server_socket = socket.socket(
     socket.IPPROTO_TCP)
 
 address = ('127.0.0.1', 50000)
-server_socket.bind(address)
-server_socket.listen(1)
+try:
+    server_socket.bind(address)
+    server_socket.listen(1)
 
-while True:
-    conn, addr = server_socket.accept()  # this blocks until a client connects
-
-    rec_message = conn.recv(32)
-    #conn.shutdown(socket.SHUT_RD)
-    conn.sendall(rec_message)
-    #conn.shutdown(socket.SHUT_WR)
-    conn.close()
-
-conn.shutdown(socket.SHUT_RD)
-conn.shutdown(socket.SHUT_WR)
-server_socket.close()
+    while True:
+        conn, addr = server_socket.accept()  # this blocks until a client connects
+        rec_message = conn.recv(32)
+        conn.shutdown(socket.SHUT_RD)
+        conn.sendall(rec_message)
+        conn.shutdown(socket.SHUT_WR)
+        conn.close()
+finally:
+    server_socket.close()
